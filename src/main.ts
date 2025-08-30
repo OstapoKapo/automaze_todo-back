@@ -3,6 +3,11 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
+import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './common/filter/HttpException.filter';
+import helmet from 'helmet';
+import { ExcludeSensitiveInterceptor } from './common/middleware/Exclude-sensitive.interceptor';
+
 
 
 dotenv.config({path: '.env.local'})
@@ -12,12 +17,20 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  app.use(helmet());
+
   app.enableCors({
     origin: 'http://localhost:3000',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
   });
+
+  app.useGlobalPipes(new ValidationPipe());
+
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  app.useGlobalInterceptors(new ExcludeSensitiveInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('to-do app API')
