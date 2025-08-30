@@ -22,9 +22,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
 
+# Копіюємо dist + prisma схему
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/server/prisma ./prisma
 
 EXPOSE 3000
 
-# Запускаємо міграції перед стартом
-CMD npx prisma migrate deploy && node dist/main.js
+# Запускаємо міграції
+CMD npx prisma migrate deploy --schema ./prisma/schema.prisma && node dist/main.js
