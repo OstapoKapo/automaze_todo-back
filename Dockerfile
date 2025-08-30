@@ -19,14 +19,17 @@ RUN npm run build
 FROM node:20-alpine
 WORKDIR /app
 
+# Копіюємо package.json + package-lock.json
 COPY package*.json ./
+
+# Встановлюємо тільки продакшн-залежності
 RUN npm install --omit=dev
 
-# Копіюємо dist + prisma схему
+# Копіюємо з builder зібрані файли та prisma схему
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/server/prisma ./prisma
+COPY --from=builder /app/prisma ./prisma
 
 EXPOSE 3000
 
-# Запускаємо міграції
+# Запускаємо міграції та сервер
 CMD npx prisma migrate deploy --schema ./prisma/schema.prisma && node dist/main.js
