@@ -11,6 +11,8 @@ import { ExcludeSensitiveInterceptor } from './common/middleware/Exclude-sensiti
 
 
 dotenv.config({path: '.env.local'})
+dotenv.config({path: '.env.production'})
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,8 +21,9 @@ async function bootstrap() {
 
   app.use(helmet());
 
+
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONT_URL,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
