@@ -69,14 +69,14 @@ export class AuthService {
 
             res.cookie('sessionId', sessionId, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'lax',
                 maxAge: 3600 * 1000 * 12, // 12 hours
             });
 
             res.cookie('csrfToken', csrfToken, {
                 httpOnly: false,
-                secure: false,
+                secure: true,
                 sameSite: 'lax',
                 maxAge: 3600 * 1000 * 12,
             });
