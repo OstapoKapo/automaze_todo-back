@@ -6,21 +6,18 @@ import Redis from 'ioredis';
 export class RedisService implements OnModuleInit {
     private client: Redis;
 
-   onModuleInit() {
-  if (process.env.UPSTASH_REDIS_REST_URL) {
-    this.client = new Redis(process.env.UPSTASH_REDIS_REST_URL, {
-      password: process.env.UPSTASH_REDIS_REST_TOKEN,
-      tls: {}, 
-    });
-  } else {
-    
-    this.client = new Redis({
-      host: 'localhost',
-      port: 6379,
-      password: 'admin',
-    });
+    onModuleInit() {
+    if (process.env.UPSTASH_REDIS_TCP_URL) {
+      this.client = new Redis(process.env.UPSTASH_REDIS_TCP_URL); // rediss:// URL
+    } else {
+      this.client = new Redis({
+        host: 'localhost',
+        port: 6379,
+        password: 'admin',
+      });
+    }
   }
-}
+
 
     multi() {
         return this.client.multi();
