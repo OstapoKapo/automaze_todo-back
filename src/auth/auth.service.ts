@@ -69,6 +69,7 @@ export class AuthService {
                 secure: true,     // boolean
                 sameSite: 'none',
                 maxAge: 3600 * 1000, 
+                path: '/',
             });
 
             this.loggerService.log(`Session created successfully for user with id: ${userID}`);
