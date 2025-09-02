@@ -11,6 +11,8 @@ import { ExcludeSensitiveInterceptor } from './common/middleware/Exclude-sensiti
 
 
 dotenv.config({path: '.env.local'})
+dotenv.config({path: '.env.production'})
+
 
 
 async function bootstrap() {
@@ -19,6 +21,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.use(helmet());
+
 
   app.enableCors({
     origin: process.env.FRONT_URL,
