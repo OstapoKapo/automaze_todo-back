@@ -14,6 +14,7 @@ export class SessionGuard implements CanActivate{
     async canActivate(context: ExecutionContext): Promise<boolean>{
        const req: Request = context.switchToHttp().getRequest();
        const sessionId = req.cookies.sessionId;
+       console.log(req.cookies.sessionId)
        if(!sessionId) throw new UnauthorizedException('Session ID is missing');
 
 

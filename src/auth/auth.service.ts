@@ -10,7 +10,6 @@ import { RecaptchaService } from 'src/recaptcha/recaptcha.service';
 import { RedisService } from 'src/redis/redis.service';
 import { SecurityLogService } from 'src/security-log/security-log.service';
 import { UserService } from 'src/user/user.service';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AuthService {
@@ -58,27 +57,18 @@ export class AuthService {
 
     private async createSession(userID: number, sessionId: string, ip: string | undefined, userAgent: string, res: Response) {
         try{
-            const csrfToken = uuidv4();
             
             await this.redisService.setSession(sessionId, {
                 userID: userID,
                 ip: ip,
                 userAgent: userAgent,
-                csrfToken
             });
 
             res.cookie('sessionId', sessionId, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                maxAge: 3600 * 1000 * 12, // 12 hours
-            });
-
-            res.cookie('csrfToken', csrfToken, {
-                httpOnly: false,
-                secure: true,
-                sameSite: 'none',
-                maxAge: 3600 * 1000 * 12,
+                httpOnly: process.env.COOKIES_HTTP_ONLY === 'true', // boolean
+                secure: process.env.COOKIES_SECURE === 'true',     // boolean
+                sameSite: (process.env.COOKIES_SAME_SITE as 'lax' | 'none') || 'lax',
+                maxAge: 3600 * 1000, 
             });
 
             this.loggerService.log(`Session created successfully for user with id: ${userID}`);
