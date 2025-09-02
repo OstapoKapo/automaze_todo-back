@@ -7,16 +7,17 @@ export class RedisService implements OnModuleInit {
     private client: Redis;
 
     onModuleInit() {
-    if (process.env.UPSTASH_REDIS_TCP_URL) {
-      this.client = new Redis(process.env.UPSTASH_REDIS_TCP_URL); // rediss:// URL
-    } else {
-      this.client = new Redis({
-        host: 'localhost',
-        port: 6379,
-        password: 'admin',
-      });
+
+        if (process.env.NODE_ENV === 'production' && process.env.UPSTASH_REDIS_TCP_URL) {
+        this.client = new Redis(process.env.UPSTASH_REDIS_TCP_URL);
+        } else {
+            this.client = new Redis({
+            host: 'localhost',
+            port: 6379,
+            password: 'admin',
+            });
+        }
     }
-  }
 
 
     multi() {
@@ -58,7 +59,7 @@ export class RedisService implements OnModuleInit {
         await this.set(`bannedUser:${email}`, true, RedisTTL.BANNED_USER);
     }
 
-    async setSession(sessionId: string, value: { userID: number; ip: string | undefined ; userAgent: string, csrfToken: string }) {
+    async setSession(sessionId: string, value: { userID: number; ip: string | undefined ; userAgent: string }) {
         await this.set(`session:${sessionId}`, value, RedisTTL.SESSION);
     }
 }
