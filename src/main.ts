@@ -7,6 +7,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/filter/HttpException.filter';
 import helmet from 'helmet';
 import { ExcludeSensitiveInterceptor } from './common/middleware/Exclude-sensitive.interceptor';
+import { FastifyAdapter } from '@nestjs/platform-fastify';
+
 
 
 
@@ -14,7 +16,13 @@ dotenv.config({path: '.env.local'})
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const isProd = process.env.NODE_ENV === 'production';
+
+
+  const app = await NestFactory.create(
+    AppModule,
+    new FastifyAdapter({ trustProxy: true })
+  );
 
   app.use(cookieParser());
 

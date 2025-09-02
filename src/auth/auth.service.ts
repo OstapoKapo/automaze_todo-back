@@ -69,7 +69,6 @@ export class AuthService {
                 secure: process.env.COOKIES_SECURE === 'true',     // boolean
                 sameSite: (process.env.COOKIES_SAME_SITE as 'lax' | 'none') || 'lax',
                 maxAge: 3600 * 1000, 
-                path: '/',
             });
 
             this.loggerService.log(`Session created successfully for user with id: ${userID}`);
