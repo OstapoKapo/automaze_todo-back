@@ -65,9 +65,9 @@ export class AuthService {
             });
 
             res.cookie('sessionId', sessionId, {
-                httpOnly: process.env.COOKIES_HTTP_ONLY === 'true', // boolean
-                secure: process.env.COOKIES_SECURE === 'true',     // boolean
-                sameSite: (process.env.COOKIES_SAME_SITE as 'lax' | 'none') || 'lax',
+                httpOnly: true, // boolean
+                secure: true,     // boolean
+                sameSite: 'none',
                 maxAge: 3600 * 1000, 
             });
 
