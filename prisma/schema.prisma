@@ -21,4 +21,20 @@ model users {
   createdat  DateTime @default(now())     @db.Timestamp(6)
   ip         String                       @db.Text                
   ua         String                       @db.Text
+  securityLogs SecurityLog[]
+}
+
+model SecurityLog{
+  logID         Int       @id @default(autoincrement())
+  personID      Int
+  eventType     String                                    @db.VarChar(50)
+  ipAddress     String                                    @db.VarChar(50)
+  userAgent     String                                    @db.Text
+  eventTime     DateTime  @default(now())                 @db.Timestamp(6)
+  description   String                                    @db.Text
+  isResolved    Boolean   @default(false)  
+
+  person        users      @relation(fields: [personID], references: [id], onDelete: Cascade)
+
+  @@map("security_logs")                                 
 }
